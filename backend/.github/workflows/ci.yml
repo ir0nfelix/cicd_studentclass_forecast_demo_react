@@ -1,0 +1,45 @@
+name: Node.js CI/CD Pipeline
+
+# Запускаем конвейер при каждом пуше в ветку main
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  # === ДЖОБА 1: ТЕСТИРОВАНИЕ ===
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Скачиваем код из репозитория
+      uses: actions/checkout@v4
+
+    - name: Устанавливаем Node.js (v18)
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18.x'
+
+    - name: Устанавливаем зависимости (Express, dotenv)
+      run: npm install
+
+    - name: Запускаем автотесты
+      run: npm test
+
+  # === ДЖОБА 2: СБОРКА АРТЕФАКТА ===
+  build:
+    # Запускать только если джоба 'test' прошла успешно
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+    - name: Скачиваем проверенный код
+      uses: actions/checkout@v4
+
+    - name: Упаковываем код в ZIP-архив (Артефакт)
+      # Исключаем папку .git и node_modules, чтобы архив был легким
+      run: zip -r weather-app-release.zip . -x "*.git*" "node_modules/*"
+
+    - name: Сохраняем Артефакт в системе
+      uses: actions/upload-artifact@v4
+      with:
+        name: app-release-build
+        path: weather-app-release.zip
+        retention-days: 7
