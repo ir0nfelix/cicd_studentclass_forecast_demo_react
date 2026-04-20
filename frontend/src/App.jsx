@@ -40,7 +40,7 @@ function App() {
     <div className="app-container">
       <div className="weather-card">
         <header className="header">
-          <h1 className="title">Fullstack Прогноз Погоды</h1>
+          <h1 className="title">Прогноз Погоды</h1>
           <select
             className="city-select"
             value={city}

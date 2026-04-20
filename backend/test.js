@@ -1,7 +1,7 @@
 const { app, CITIES } = require('./server.js');
 
 async function runTests() {
-    console.log('Запуск простого CI/CD конвейера тестов...\n');
+    console.log('Запуск тестового CI/CD конвейера тестов...\n');
 
     try {
         console.log('Тест 1: Проверка координат для города Москва');
@@ -77,7 +77,7 @@ async function runTests() {
             throw new Error('Сервер не передал API-ключ (X-Yandex-Weather-Key) в заголовке запроса к Яндексу.');
         }
 
-        console.log('✅ Тест 2 пройден: Эндпоинт корректно проксирует вызов к API Яндекс-Погода через fetch.\n');
+        console.log('✅ Тест 2 пройден: Эндпоинт корректно проксирует вызов к API Яндекс-Погода.\n');
 
         console.log('\nTrue');
         process.exit(0);
