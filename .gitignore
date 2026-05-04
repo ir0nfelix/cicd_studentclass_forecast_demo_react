@@ -1,4 +1,12 @@
+# Зависимости (самая тяжелая часть, качается через npm install)
 node_modules/
-dist/
+backend/node_modules/
+frontend/node_modules/
+
+# Сгенерированные артефакты и статика
+frontend/dist/
+backend/public/
+*.zip
+
+# Секретные файлы (чтобы пароли не утекли в открытый доступ)
 .env
-.DS_Store
