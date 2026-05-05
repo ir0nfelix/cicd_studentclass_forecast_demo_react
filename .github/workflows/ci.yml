@@ -1,1 +1,57 @@
-# TODO
+name: My React CI-file
+
+on:
+  push:
+    branches: ["main"]
+
+jobs:
+  test-backend:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Скачиваем код
+      uses: actions/checkout@v4
+
+    - name: Установка NodeJS
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18.x'
+
+    - name: Установка пакетов и Тесты
+      working-directory: ./backend
+      run: |
+       npm ci
+       npm test
+
+  build_and_pack:
+    needs: test-backend
+    runs-on: ubuntu-latest
+    steps:
+    - name: Скачиваем код
+      uses: actions/checkout@v4
+
+    - name: Установка NodeJS
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18.x'
+
+    - name: Сборка React
+      working-directory: ./frontend
+      run: |
+        npm ci
+        npm run build
+
+    - name: Слияние (Монтируем frontend в директорию backend)
+      run: |
+        mkdir -p ./backend/public
+        rm -rf ./backend/public/*
+        cp -r ./frontend/dist/* ./backend/public/
+
+    - name: Упаковка Артефакта (только backend со статикой)
+      run: zip -r weather-report-app.zip ./backend -x "*/node_modules/*"
+
+    - name: Сохранение Артефакта
+      uses: actions/upload-artifact@v4
+      with:
+        name: app-build
+        path: weather-report-app.zip
+        retention-days: 7
