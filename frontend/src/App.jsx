@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import './index.css';
 
 const CITIES = [
-  { id: 'moscow', name: 'Москва (moscow)' },
+  { id: 'moscow', name: 'Москва (Moscow)' },
   { id: 'spb', name: 'Санкт-Петербург (spb)' },
   { id: 'novosibirsk', name: 'Новосибирск (novosibirsk)' },
   { id: 'rostov', name: 'Ростов-на-Дону (rostov)' }
