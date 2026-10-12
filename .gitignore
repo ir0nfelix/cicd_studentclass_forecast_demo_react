@@ -1,14 +1,45 @@
-# Зависимости (самая тяжелая часть, качается через npm install)
-node_modules/
-backend/node_modules/
-frontend/node_modules/
+name: CI for Weather App
 
-# Сгенерированные артефакты и статика
-frontend/dist/
-backend/public/
-*.zip
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
 
-# Секретные файлы (чтобы пароли не утекли в открытый доступ)
-.env
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
 
-.idea/
+    - name: Set up Environment
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Run Linter
+      run: npm run lint
+
+    - name: Run Tests
+      run: npm run test
+
+    # ДОБАВЛЕНО: Сборка проекта (если есть скрипт build)
+    # Это создаст папки frontend/dist или backend/public
+    - name: Build project
+      run: npm run build 
+      # Если build находится во фронтенде, может понадобиться: npm run build --prefix frontend
+
+    # Создание ZIP-архива
+    # Мы исключаем node_modules и .git, но оставляем dist/public, так как они нужны для деплоя
+    - name: Create ZIP archive
+      run: zip -r weather-app.zip . -x "node_modules/*" -x ".git/*" -x ".env"
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: weather-app-artifact
+        path: weather-app.zip
